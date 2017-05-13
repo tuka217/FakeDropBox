@@ -1,8 +1,6 @@
 package org.awalasek.fakeDropBox;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -21,7 +19,8 @@ public class Test extends HttpServlet {
      */
     public Test() {
         super();
-        threadPool = Executors.newFixedThreadPool(5);
+        logger = Logger.getLogger("Test");
+        uploadScheduler = new UploadSchedulerImpl();
     }
 
     /**
@@ -30,23 +29,17 @@ public class Test extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
+        
         response.getWriter().append("Served at: ").append(request.getContextPath());
-        threadPool.submit(new Runnable() {
-            
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                logger.info("Boom!");
-            }
-        });
+        FileUploadRequest fileUploadRequest = new FileUploadRequest(request);
+        uploadScheduler.addNewUpload(fileUploadRequest);
+        logger.info("New upload added, username="
+                    + fileUploadRequest.getUsername()
+                    + ", fileAmount="
+                    + fileUploadRequest.getFileAmount());
     }
     
-    private static Logger logger = Logger.getLogger("Test");
-    private ExecutorService threadPool;
+    private static Logger logger;
+    private UploadScheduler uploadScheduler;
 
 }
