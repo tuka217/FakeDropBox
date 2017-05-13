@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 public class Test extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private static Logger logger;
+    private UploadScheduler uploadScheduler;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -29,17 +32,18 @@ public class Test extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-        FileUploadRequest fileUploadRequest = new FileUploadRequest(request);
-        uploadScheduler.addNewUpload(fileUploadRequest);
-        logger.info("New upload added, username="
-                    + fileUploadRequest.getUsername()
-                    + ", fileAmount="
-                    + fileUploadRequest.getFileAmount());
-    }
-    
-    private static Logger logger;
-    private UploadScheduler uploadScheduler;
 
+        response.getWriter().append("Served at: ").append(request.getContextPath());
+
+        try {
+            FileUploadRequest fileUploadRequest = new FileUploadRequest(request);
+            uploadScheduler.addNewUpload(fileUploadRequest);
+            logger.info("New upload added, username=" + fileUploadRequest.getUsername() + ", fileAmount="
+                    + fileUploadRequest.getFileAmount());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
 }

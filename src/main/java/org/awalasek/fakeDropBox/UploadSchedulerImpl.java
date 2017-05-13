@@ -13,7 +13,6 @@ public class UploadSchedulerImpl implements UploadScheduler {
 
     public UploadSchedulerImpl() {
         logger = Logger.getLogger("UploadSchedulerImpl");
-
         userQueues = new ConcurrentHashMap<>();
 
         Thread scheduler = new Thread(new Scheduler(userQueues));

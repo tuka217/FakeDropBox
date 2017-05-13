@@ -4,9 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 
 class FileUploadRequest {
 
-    public FileUploadRequest(HttpServletRequest request) {
+    public FileUploadRequest(HttpServletRequest request)
+            throws NullPointerException, NumberFormatException {
         username = request.getParameter("username");
         fileAmount = Integer.parseInt(request.getParameter("fileAmount"));
+        if (username == null || fileAmount == null) {
+            throw new NullPointerException();
+        }
     }
 
     public String getUsername() {
