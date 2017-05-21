@@ -1,5 +1,5 @@
 package org.awalasek.fakeDropBox;
 
-public interface UploadScheduler {
+interface UploadScheduler {
     void addNewUpload(FileUploadRequest request);
 }

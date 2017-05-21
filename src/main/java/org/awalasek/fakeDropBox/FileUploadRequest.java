@@ -21,10 +21,6 @@ class FileUploadRequest {
         return fileAmount;
     }
 
-    public Boolean noFilesLeft() {
-        return fileAmount <= 0;
-    }
-
     private String username;
     private Integer fileAmount;
 }

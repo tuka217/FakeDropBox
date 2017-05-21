@@ -6,16 +6,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
-public class UploadSchedulerImpl implements UploadScheduler {
+class UploadSchedulerImpl implements UploadScheduler {
 
     private static Logger logger;
-    private Map<String, Queue<Task>> userQueues;
+    private Map<String, Queue<UploadTask>> userQueues;
 
     public UploadSchedulerImpl() {
         logger = Logger.getLogger("UploadSchedulerImpl");
         userQueues = new ConcurrentHashMap<>();
 
-        Thread scheduler = new Thread(new Scheduler(userQueues));
+        Thread scheduler = new Thread(new TaskScheduler(userQueues));
         scheduler.start();
     }
 
@@ -35,9 +35,9 @@ public class UploadSchedulerImpl implements UploadScheduler {
 
     private void pushTasksToQueue(FileUploadRequest request) {
         String username = request.getUsername();
-        Queue<Task> tasks = userQueues.get(username);
+        Queue<UploadTask> tasks = userQueues.get(username);
         for (int i = 0; i < request.getFileAmount(); ++i) {
-            tasks.add(new Task(username));
+            tasks.add(new UploadTask(username, "temp-file-name.txt"));
         }
     }
 
