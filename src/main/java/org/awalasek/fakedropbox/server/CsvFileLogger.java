@@ -8,12 +8,17 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CsvFileLogger implements FileLogger {
+class CsvFileLogger implements FileLogger {
+
+    private static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
+    private static final Set<PosixFilePermission> FILE_PERMISSIONS = PosixFilePermissions.fromString("rwxrwxr-x");
 
     private static final String LOG_NAME = ".log.csv";
     private static final String SEP = ";";
@@ -22,10 +27,10 @@ public class CsvFileLogger implements FileLogger {
     private String fileDirPath;
 
     public CsvFileLogger(Integer threadId) throws IOException {
-        fileDirPath = UploadTask.PATH_TO_STORAGE + threadId + "/";
+        fileDirPath = PATH_TO_STORAGE + threadId + "/";
         logFile = Paths.get(fileDirPath + LOG_NAME);
         mapFileToUsername = new ConcurrentHashMap<>();
-        
+
         createFileIfDoesNotExist();
         readLogFile();
     }
@@ -36,11 +41,12 @@ public class CsvFileLogger implements FileLogger {
         mapFileToUsername.put(pathToFile, username);
         updateLogFile();
     }
-    
+
     private void createFileIfDoesNotExist() throws IOException {
         if (!logFile.toFile().exists()) {
-            Files.createDirectories(logFile.getParent(), PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
-            Files.createFile(logFile, PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
+            Files.createDirectories(logFile.getParent(),
+                    PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
+            Files.createFile(logFile, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
         }
     }
 
@@ -48,7 +54,7 @@ public class CsvFileLogger implements FileLogger {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(logFile.toString()));
-            
+
             String line;
             while ((line = br.readLine()) != null) {
                 String[] entry = line.split(SEP);
@@ -65,7 +71,7 @@ public class CsvFileLogger implements FileLogger {
             }
         }
     }
-    
+
     private void updateLogFile() {
         PrintWriter writer = null;
         try {
@@ -73,16 +79,16 @@ public class CsvFileLogger implements FileLogger {
             for (Entry<Path, String> entry : mapFileToUsername.entrySet()) {
                 writer.println(entry.getKey().toString() + ";" + entry.getValue());
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (writer != null) {
                 writer.close();
             }
         }
-        
+
     }
-    
+
     private String getFilePath(String username, String filename) {
         return fileDirPath + username + "/" + filename;
     }

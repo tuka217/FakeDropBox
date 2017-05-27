@@ -14,10 +14,10 @@ class TaskScheduler implements Runnable {
 
     private static Logger logger;
     private ExecutorService threadPool;
-    private Map<String, Queue<UploadTask>> userQueues;
+    private Map<String, Queue<AbstractTask>> userQueues;
 
-    public TaskScheduler(Map<String, Queue<UploadTask>> userQueues) {
-        logger = Logger.getLogger("Scheduler");
+    public TaskScheduler(Map<String, Queue<AbstractTask>> userQueues) {
+        logger = Logger.getLogger(this.getClass().getName());
 
         threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         this.userQueues = userQueues;
@@ -32,16 +32,16 @@ class TaskScheduler implements Runnable {
     }
 
     private void checkQueuesForRequests() {
-        for (Entry<String, Queue<UploadTask>> user : userQueues.entrySet()) {
+        for (Entry<String, Queue<AbstractTask>> user : userQueues.entrySet()) {
             if (!user.getValue().isEmpty()) {
                 submitTaskToThreadPool(user);
             }
         }
     }
 
-    private void submitTaskToThreadPool(Entry<String, Queue<UploadTask>> user) {
+    private void submitTaskToThreadPool(Entry<String, Queue<AbstractTask>> user) {
         try {
-            Queue<UploadTask> tasks = user.getValue();
+            Queue<AbstractTask> tasks = user.getValue();
             threadPool.submit(tasks.poll());
             logger.info("Task submitted, username=" + user.getKey() + ", tasksLeft=" + tasks.size());
         } catch (NullPointerException e) {

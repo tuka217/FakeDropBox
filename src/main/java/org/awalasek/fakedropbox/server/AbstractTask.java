@@ -10,34 +10,36 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
-class UploadTask implements Runnable {
+abstract class AbstractTask implements Runnable {
 
-    public static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
-    public static final Set<PosixFilePermission> FILE_PERMISSIONS =
-            PosixFilePermissions.fromString("rwxrwxr-x");
-    
-    private static Logger logger;
-    
-    private Integer threadNum;
-    private String username;
-    private String filename;
-    private FileLogger fileLogger;
+    protected static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
+    protected static final Set<PosixFilePermission> FILE_PERMISSIONS = PosixFilePermissions.fromString("rwxrwxr-x");
 
-    public UploadTask(String username, String filename) {
-        logger = Logger.getLogger("Task");
+    protected static Logger logger;
+
+    protected Integer threadNum;
+    protected String username;
+    protected String filename;
+    protected FileLogger fileLogger;
+
+    protected abstract void fakeFileOperation();
+
+    public AbstractTask(String username, String filename) {
+        logger = Logger.getLogger(this.getClass().getName());
         this.username = username;
         this.filename = filename;
         this.threadNum = 0;
     }
 
     @Override
-    public void run() {
+    public final void run() {
         getThreadNumberIfNotSet();
         createFileLogger();
         createDirectoryIfDoesNotExist();
-        fakeFileUploading();
+        updateFile();
 
-        logger.info("Upload finished, username=" + username + ", threadNum=" + threadNum);
+        logger.info(this.getClass().getName() + " finished, username=" + username + ", filename=" + filename
+                + ", threadNum=" + threadNum);
     }
 
     private void getThreadNumberIfNotSet() {
@@ -46,7 +48,7 @@ class UploadTask implements Runnable {
             threadNum = Character.getNumericValue(threadName.charAt(threadName.length() - 1));
         }
     }
-    
+
     private void createFileLogger() {
         try {
             if (fileLogger == null)
@@ -55,7 +57,7 @@ class UploadTask implements Runnable {
             e.printStackTrace();
         }
     }
-    
+
     private void createDirectoryIfDoesNotExist() {
         try {
             Path path = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username);
@@ -68,26 +70,13 @@ class UploadTask implements Runnable {
         }
     }
 
-    private void fakeFileUploading() {
+    private final void updateFile() {
         try {
             Thread.sleep(new Random().nextInt(3) * 1000);
-            createFile();
+            fakeFileOperation();
             fileLogger.updateLog(username, filename);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-    
-    private void createFile() {
-        Path path = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username + "/" + filename);
-        if (path.toFile().exists()) {
-            path.toFile().delete();
-        }
-        try {
-            Files.createDirectories(path, PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
-            Files.createFile(path, PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
-        } catch (IOException e) {
-        }
-        
     }
 }

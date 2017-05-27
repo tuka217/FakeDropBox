@@ -24,7 +24,7 @@ public class FileChange extends HttpServlet {
      */
     public FileChange() {
         super();
-        logger = Logger.getLogger("Test");
+        logger = Logger.getLogger(this.getClass().getName());
         uploadScheduler = new UploadSchedulerImpl();
     }
 

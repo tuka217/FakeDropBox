@@ -9,11 +9,13 @@ import java.util.logging.Logger;
 class UploadSchedulerImpl implements UploadScheduler {
 
     private static Logger logger;
-    private Map<String, Queue<UploadTask>> userQueues;
+    private Map<String, Queue<AbstractTask>> userQueues;
+    private TaskFactory taskFactory;
 
     public UploadSchedulerImpl() {
-        logger = Logger.getLogger("UploadSchedulerImpl");
+        logger = Logger.getLogger(this.getClass().getName());
         userQueues = new ConcurrentHashMap<>();
+        taskFactory = new TaskFactory();
 
         Thread scheduler = new Thread(new TaskScheduler(userQueues));
         scheduler.start();
@@ -21,11 +23,11 @@ class UploadSchedulerImpl implements UploadScheduler {
 
     @Override
     public void addNewUpload(FileUploadRequest request) {
-        createUserQueue(request);
+        createUserQueueIfDoesNotExist(request);
         pushTasksToQueue(request);
     }
 
-    private void createUserQueue(FileUploadRequest request) {
+    private void createUserQueueIfDoesNotExist(FileUploadRequest request) {
         String username = request.getUsername();
         if (!userQueues.containsKey(username)) {
             userQueues.put(username, new ConcurrentLinkedQueue<>());
@@ -35,9 +37,8 @@ class UploadSchedulerImpl implements UploadScheduler {
 
     private void pushTasksToQueue(FileUploadRequest request) {
         String username = request.getUsername();
-        String filename = request.getFilename();
-        Queue<UploadTask> tasks = userQueues.get(username);
-        tasks.add(new UploadTask(username, filename));
+        Queue<AbstractTask> tasks = userQueues.get(username);
+        tasks.add(taskFactory.getTask(request));
     }
 
 }
