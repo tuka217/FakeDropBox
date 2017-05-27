@@ -6,10 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 
+import org.awalasek.fakedropbox.common.FileChange;
+
 class CreateTask extends AbstractTask {
 
-    public CreateTask(FileUploadRequest request) {
-        super(request.getUsername(), request.getFilename());
+    public CreateTask(FileChange request) {
+        super(request);
     }
 
     @Override

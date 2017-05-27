@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.awalasek.fakedropbox.common.FileChange;
+
 abstract class AbstractTask implements Runnable {
 
     protected static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
@@ -24,10 +26,10 @@ abstract class AbstractTask implements Runnable {
 
     protected abstract void fakeFileOperation();
 
-    public AbstractTask(String username, String filename) {
+    public AbstractTask(FileChange changeRequest) {
         logger = Logger.getLogger(this.getClass().getName());
-        this.username = username;
-        this.filename = filename;
+        this.username = changeRequest.getUsername();
+        this.filename = changeRequest.getFilename();
         this.threadNum = 0;
     }
 

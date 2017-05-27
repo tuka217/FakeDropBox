@@ -1,20 +1,21 @@
 package org.awalasek.fakedropbox.server;
 
-import org.awalasek.FakeDropBox.common.ChangeType;
+import org.awalasek.fakedropbox.common.FileChange;
 
-public class TaskFactory {
+class TaskFactory {
 
-    public AbstractTask getTask(FileUploadRequest request) {
-        if (request == null) {
+    public AbstractTask getTask(FileChange changeRequest) {
+        if (changeRequest == null) {
             return null;
         }
 
-        if (request.getOperationType().equals(ChangeType.CREATE)) {
-            return new CreateTask(request);
-        } else if (request.getOperationType().equals(ChangeType.MODIFY)) {
-            return new ModifyTask(request);
-        } else if (request.getOperationType().equals(ChangeType.REMOVE)) {
-            return new RemoveTask(request);
+        switch (changeRequest.getChangeType()) {
+        case CREATE:
+            return new CreateTask(changeRequest);
+        case MODIFY:
+            return new ModifyTask(changeRequest);
+        case REMOVE:
+            return new RemoveTask(changeRequest);
         }
 
         return null;

@@ -1,5 +1,7 @@
 package org.awalasek.fakedropbox.server;
 
+import org.awalasek.fakedropbox.common.FileChange;
+
 interface UploadScheduler {
-    void addNewUpload(FileUploadRequest request);
+    void addNewUpload(FileChange request);
 }

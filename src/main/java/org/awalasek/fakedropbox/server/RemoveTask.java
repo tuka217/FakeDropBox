@@ -3,10 +3,12 @@ package org.awalasek.fakedropbox.server;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.awalasek.fakedropbox.common.FileChange;
+
 class RemoveTask extends AbstractTask {
 
-    public RemoveTask(FileUploadRequest request) {
-        super(request.getUsername(), request.getFilename());
+    public RemoveTask(FileChange request) {
+        super(request);
     }
 
     @Override

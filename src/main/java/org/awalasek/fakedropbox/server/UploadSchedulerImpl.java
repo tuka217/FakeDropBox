@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
+import org.awalasek.fakedropbox.common.FileChange;
+
 class UploadSchedulerImpl implements UploadScheduler {
 
     private static Logger logger;
@@ -22,12 +24,12 @@ class UploadSchedulerImpl implements UploadScheduler {
     }
 
     @Override
-    public void addNewUpload(FileUploadRequest request) {
+    public void addNewUpload(FileChange request) {
         createUserQueueIfDoesNotExist(request);
         pushTasksToQueue(request);
     }
 
-    private void createUserQueueIfDoesNotExist(FileUploadRequest request) {
+    private void createUserQueueIfDoesNotExist(FileChange request) {
         String username = request.getUsername();
         if (!userQueues.containsKey(username)) {
             userQueues.put(username, new ConcurrentLinkedQueue<>());
@@ -35,7 +37,7 @@ class UploadSchedulerImpl implements UploadScheduler {
         }
     }
 
-    private void pushTasksToQueue(FileUploadRequest request) {
+    private void pushTasksToQueue(FileChange request) {
         String username = request.getUsername();
         Queue<AbstractTask> tasks = userQueues.get(username);
         tasks.add(taskFactory.getTask(request));
