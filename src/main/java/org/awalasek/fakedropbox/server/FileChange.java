@@ -1,9 +1,10 @@
-package org.awalasek.fakeDropBox;
+package org.awalasek.fakedropbox.server;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Test
  */
-public class Test extends HttpServlet {
+@WebServlet("fileChange")
+public class FileChange extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static Logger logger;
@@ -20,17 +22,13 @@ public class Test extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Test() {
+    public FileChange() {
         super();
         logger = Logger.getLogger("Test");
         uploadScheduler = new UploadSchedulerImpl();
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -38,8 +36,8 @@ public class Test extends HttpServlet {
         try {
             FileUploadRequest fileUploadRequest = new FileUploadRequest(request);
             uploadScheduler.addNewUpload(fileUploadRequest);
-            logger.info("New upload added, username=" + fileUploadRequest.getUsername() + ", fileAmount="
-                    + fileUploadRequest.getFileAmount());
+            logger.info("New upload added, username=" + fileUploadRequest.getUsername() + ", filename="
+                    + fileUploadRequest.getFilename());
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {

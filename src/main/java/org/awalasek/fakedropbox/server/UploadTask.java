@@ -1,4 +1,4 @@
-package org.awalasek.fakeDropBox;
+package org.awalasek.fakedropbox.server;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -84,6 +84,7 @@ class UploadTask implements Runnable {
             path.toFile().delete();
         }
         try {
+            Files.createDirectories(path, PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
             Files.createFile(path, PosixFilePermissions.asFileAttribute(UploadTask.FILE_PERMISSIONS));
         } catch (IOException e) {
         }

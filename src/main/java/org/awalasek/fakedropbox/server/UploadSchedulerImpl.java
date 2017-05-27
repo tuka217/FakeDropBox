@@ -1,4 +1,4 @@
-package org.awalasek.fakeDropBox;
+package org.awalasek.fakedropbox.server;
 
 import java.util.Map;
 import java.util.Queue;
@@ -35,10 +35,9 @@ class UploadSchedulerImpl implements UploadScheduler {
 
     private void pushTasksToQueue(FileUploadRequest request) {
         String username = request.getUsername();
+        String filename = request.getFilename();
         Queue<UploadTask> tasks = userQueues.get(username);
-        for (int i = 0; i < request.getFileAmount(); ++i) {
-            tasks.add(new UploadTask(username, "temp-file-name.txt"));
-        }
+        tasks.add(new UploadTask(username, filename));
     }
 
 }

@@ -1,4 +1,4 @@
-package org.awalasek.fakeDropBox;
+package org.awalasek.fakedropbox.server;
 
 import java.util.Map;
 import java.util.Queue;
