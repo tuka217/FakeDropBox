@@ -15,7 +15,7 @@ import org.awalasek.fakedropbox.common.FileChangeFactory;
 /**
  * Servlet implementation class Test
  */
-@WebServlet("fileChange")
+@WebServlet("/fileChange")
 public class FileChangeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

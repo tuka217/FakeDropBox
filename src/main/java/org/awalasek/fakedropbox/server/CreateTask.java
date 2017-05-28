@@ -16,10 +16,11 @@ class CreateTask extends AbstractTask {
 
     @Override
     protected final void fakeFileOperation() {
-        Path path = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username + "/" + filename);
+        Path directoryPath = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username);
+        Path filePath = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username + "/" + filename);
         try {
-            Files.createDirectories(path, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
-            Files.createFile(path, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
+            Files.createDirectories(directoryPath, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
+            Files.createFile(filePath, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
         } catch (IOException e) {
             e.printStackTrace();
         }
