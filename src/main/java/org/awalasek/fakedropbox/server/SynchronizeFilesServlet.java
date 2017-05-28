@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/synchronizeFiles")
 public class SynchronizeFilesServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -35,26 +34,5 @@ public class SynchronizeFilesServlet extends HttpServlet {
         String username = request.getParameter("username");
     }
 
-    private void readLogFile() {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(logFile.toString()));
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] entry = line.split(SEP);
-                mapFileToUsername.put(Paths.get(entry[0]), entry[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null)
-                    br.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 
 }
