@@ -13,9 +13,11 @@ class RemoveTask extends AbstractTask {
 
     @Override
     protected final void fakeFileOperation() {
-        Path path = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username + "/" + filename);
-        if (path.toFile().exists()) {
-            path.toFile().delete();
+        for (int i = 1; i <= TaskScheduler.THREAD_POOL_SIZE; i++) {
+            Path path = Paths.get(PATH_TO_STORAGE + i + "/" + username + "/" + filename);
+            if (path.toFile().exists()) {
+                path.toFile().delete();
+            }
         }
     }
 }

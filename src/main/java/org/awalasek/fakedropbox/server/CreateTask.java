@@ -20,7 +20,10 @@ class CreateTask extends AbstractTask {
         Path filePath = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username + "/" + filename);
         try {
             Files.createDirectories(directoryPath, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
+            logger.info("Created directory: " + directoryPath.toAbsolutePath().toString());
+            filePath.toFile().getParentFile().mkdirs();
             Files.createFile(filePath, PosixFilePermissions.asFileAttribute(FILE_PERMISSIONS));
+            logger.info("Created file: " + filePath.toAbsolutePath().toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
