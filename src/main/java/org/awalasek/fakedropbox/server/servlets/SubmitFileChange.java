@@ -1,4 +1,4 @@
-package org.awalasek.fakedropbox.server;
+package org.awalasek.fakedropbox.server.servlets;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.awalasek.fakedropbox.common.FileChange;
 import org.awalasek.fakedropbox.common.FileChangeFactory;
+import org.awalasek.fakedropbox.server.UploadScheduler;
+import org.awalasek.fakedropbox.server.UploadSchedulerImpl;
 
 /**
  * Servlet implementation class Test
  */
 @WebServlet("/fileChange")
-public class FileChangeServlet extends HttpServlet {
+public class SubmitFileChange extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static Logger logger;
@@ -26,7 +28,7 @@ public class FileChangeServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FileChangeServlet() {
+    public SubmitFileChange() {
         super();
         logger = Logger.getLogger(this.getClass().getName());
         uploadScheduler = new UploadSchedulerImpl();

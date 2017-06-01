@@ -1,4 +1,4 @@
-package org.awalasek.fakedropbox.server;
+package org.awalasek.fakedropbox.server.tasks;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,8 +11,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.awalasek.fakedropbox.common.FileChange;
+import org.awalasek.fakedropbox.server.filelog.FileLogWriter;
 
-abstract class AbstractTask implements Runnable {
+public abstract class AbstractTask implements Runnable {
 
     protected static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
     protected static final Set<PosixFilePermission> FILE_PERMISSIONS = PosixFilePermissions.fromString("rwxrwxr-x");
@@ -22,9 +23,10 @@ abstract class AbstractTask implements Runnable {
     protected Integer threadNum;
     protected String username;
     protected String filename;
-    protected FileLogger fileLogger;
+    protected FileLogWriter fileLogger;
 
     protected abstract void fakeFileOperation();
+    protected abstract void createFileLogger();
 
     public AbstractTask(FileChange changeRequest) {
         logger = Logger.getLogger(this.getClass().getName());
@@ -51,15 +53,6 @@ abstract class AbstractTask implements Runnable {
         }
     }
 
-    private void createFileLogger() {
-        try {
-            if (fileLogger == null)
-                fileLogger = new CsvFileLogger(threadNum);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void createDirectoryIfDoesNotExist() {
         try {
             Path path = Paths.get(PATH_TO_STORAGE + threadNum + "/" + username);
@@ -76,7 +69,6 @@ abstract class AbstractTask implements Runnable {
         try {
             Thread.sleep(new Random().nextInt(3) * 1000);
             fakeFileOperation();
-            fileLogger.updateLog(username, filename);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

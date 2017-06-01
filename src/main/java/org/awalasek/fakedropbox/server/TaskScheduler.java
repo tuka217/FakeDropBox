@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-class TaskScheduler implements Runnable {
+import org.awalasek.fakedropbox.server.tasks.AbstractTask;
+
+public class TaskScheduler implements Runnable {
 
     public static final int THREAD_POOL_SIZE = 5;
     private static final int SCHEDULER_SLEEP_TIME_MILLIS = 150;

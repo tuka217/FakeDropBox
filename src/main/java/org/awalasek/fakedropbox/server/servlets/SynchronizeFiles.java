@@ -1,4 +1,4 @@
-package org.awalasek.fakedropbox.server;
+package org.awalasek.fakedropbox.server.servlets;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,23 +13,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.awalasek.fakedropbox.server.filelog.CsvLogReader;
+import org.awalasek.fakedropbox.server.filelog.FileLogReader;
 import org.json.JSONObject;
 
 /**
  * Servlet implementation class SynchronizeFilesServlet
  */
 @WebServlet("/synchronizeFiles")
-public class SynchronizeFilesServlet extends HttpServlet {
+public class SynchronizeFiles extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected static Logger logger;
 
-    private LogFileReader logFileReader = new LogFilesReaderImpl();
+    private FileLogReader logFileReader = new CsvLogReader();
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SynchronizeFilesServlet() {
+    public SynchronizeFiles() {
         super();
         logger = Logger.getLogger(this.getClass().getName());
     }

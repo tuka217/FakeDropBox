@@ -1,4 +1,4 @@
-package org.awalasek.fakedropbox.server;
+package org.awalasek.fakedropbox.server.filelog;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,12 +12,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-abstract class AbstractLogHandler {
+abstract class AbstractCsvLogHandler {
 
-    protected static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
-    protected static final Set<PosixFilePermission> FILE_PERMISSIONS = PosixFilePermissions.fromString("rwxrwxr-x");
     protected static final String LOG_NAME = ".log.csv";
     protected static final String SEP = ";";
+    protected static final String PATH_TO_STORAGE = "webapps/FileStorage/thread-";
+    protected static final Set<PosixFilePermission> FILE_PERMISSIONS = PosixFilePermissions.fromString("rwxrwxr-x");
 
     protected Map<Path, String> readLogFile(Path logFile) throws FileNotFoundException {
         Map<Path, String> mapFileToUsername = null;

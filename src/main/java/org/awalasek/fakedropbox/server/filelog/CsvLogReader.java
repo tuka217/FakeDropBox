@@ -1,4 +1,4 @@
-package org.awalasek.fakedropbox.server;
+package org.awalasek.fakedropbox.server.filelog;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
@@ -6,7 +6,9 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class LogFilesReaderImpl extends AbstractLogHandler implements LogFileReader {
+import org.awalasek.fakedropbox.server.TaskScheduler;
+
+public class CsvLogReader extends AbstractCsvLogHandler implements FileLogReader {
 
     private static String getFileDirPath(int threadId) {
         return PATH_TO_STORAGE + threadId + "/";

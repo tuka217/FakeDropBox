@@ -7,8 +7,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 import org.awalasek.fakedropbox.common.FileChange;
+import org.awalasek.fakedropbox.server.tasks.AbstractTask;
+import org.awalasek.fakedropbox.server.tasks.TaskFactory;
 
-class UploadSchedulerImpl implements UploadScheduler {
+public class UploadSchedulerImpl implements UploadScheduler {
 
     private static Logger logger;
     private Map<String, Queue<AbstractTask>> userQueues;
